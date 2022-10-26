@@ -17,14 +17,17 @@ class Program
         string authToken = Environment.GetEnvironmentVariable("TWILIO_AUTH_TOKEN");
 
         TwilioClient.Init(accountSid, authToken);
-        await ProcessWeatherData();
+        var weatherData = await ProcessWeatherData();
+        int currentTemp = (int)(weatherData.Main.Temp);
+        int lowTemp = (int)(weatherData.Main.TempMin);
+        int highTemp = (int)(weatherData.Main.TempMax);
         var message = MessageResource.Create(
-            body: $"Good morning! Here's your daily weather forecast. The current temperature is blank.",
+            body: $"Good morning! Here's your daily weather forecast. The current temperature is {currentTemp}°F. With a high of {highTemp} and a low of {lowTemp}",
             from: new Twilio.Types.PhoneNumber(Environment.GetEnvironmentVariable("FROM")),
             to: new Twilio.Types.PhoneNumber(Environment.GetEnvironmentVariable("TO"))
         );
     }
-    private static async Task ProcessWeatherData()
+    private static async Task<WeatherData> ProcessWeatherData()
     {
         client.DefaultRequestHeaders.Accept.Clear();
         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
@@ -32,8 +35,8 @@ class Program
 
         var stringTask = client.GetStringAsync($"http://api.openweathermap.org/data/2.5/weather?q=jacksonville&appid={Environment.GetEnvironmentVariable("OPEN_WEATHER_MAP_KEY")}&units=imperial");
 
-        var weatherData = await stringTask;
-        var weatherJson = Newtonsoft.Json.JsonConvert.DeserializeObject<WeatherData>(weatherData);
-        Console.Write($"{weatherJson.Visibility}");
+        var weatherJson = await stringTask;
+        var deserializedWeatherData = Newtonsoft.Json.JsonConvert.DeserializeObject<WeatherData>(weatherJson);
+        return deserializedWeatherData;
     }
 }
