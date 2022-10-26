@@ -5337,6 +5337,7 @@
   "projectFileDependencyGroups": {
     "net6.0": [
       "DotNetEnv >= 2.3.0",
+      "Newtonsoft.Json >= 13.0.1",
       "Swashbuckle.AspNetCore >= 6.2.3",
       "twilio >= 5.81.0"
     ]
@@ -5381,6 +5382,10 @@
           "DotNetEnv": {
             "target": "Package",
             "version": "[2.3.0, )"
+          },
+          "Newtonsoft.Json": {
+            "target": "Package",
+            "version": "[13.0.1, )"
           },
           "Swashbuckle.AspNetCore": {
             "target": "Package",

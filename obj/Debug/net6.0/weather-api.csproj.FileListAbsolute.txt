@@ -32,3 +32,5 @@
 /Users/mikaylabryant/Projects/weather-api/bin/Debug/net6.0/Newtonsoft.Json.dll
 /Users/mikaylabryant/Projects/weather-api/bin/Debug/net6.0/System.IdentityModel.Tokens.Jwt.dll
 /Users/mikaylabryant/Projects/weather-api/bin/Debug/net6.0/Twilio.dll
+/Users/mikaylabryant/Projects/weather-api/bin/Debug/net6.0/DotNetEnv.dll
+/Users/mikaylabryant/Projects/weather-api/bin/Debug/net6.0/Sprache.dll

@@ -1,24 +1,39 @@
 using System;
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
+using System.Threading.Tasks;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text.Json;
 
 
 class Program
 {
-    static void Main(string[] args)
+    private static readonly HttpClient client = new HttpClient();
+    static async Task Main(string[] args)
     {
         DotNetEnv.Env.Load();
         string accountSid = Environment.GetEnvironmentVariable("TWILIO_ACCOUNT_SID");
         string authToken = Environment.GetEnvironmentVariable("TWILIO_AUTH_TOKEN");
 
         TwilioClient.Init(accountSid, authToken);
-
+        await ProcessWeatherData();
         var message = MessageResource.Create(
-            body: "Hi this is a test message hehe",
+            body: $"Good morning! Here's your daily weather forecast. The current temperature is blank.",
             from: new Twilio.Types.PhoneNumber(Environment.GetEnvironmentVariable("FROM")),
             to: new Twilio.Types.PhoneNumber(Environment.GetEnvironmentVariable("TO"))
         );
+    }
+    private static async Task ProcessWeatherData()
+    {
+        client.DefaultRequestHeaders.Accept.Clear();
+        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
+        client.DefaultRequestHeaders.Add("User-Agent", ".NET Foundation Repository Reporter");
 
-        Console.WriteLine(message.Sid);
+        var stringTask = client.GetStringAsync($"http://api.openweathermap.org/data/2.5/weather?q=jacksonville&appid={Environment.GetEnvironmentVariable("OPEN_WEATHER_MAP_KEY")}&units=imperial");
+
+        var weatherData = await stringTask;
+        var weatherJson = Newtonsoft.Json.JsonConvert.DeserializeObject<WeatherData>(weatherData);
+        Console.Write($"{weatherJson.Visibility}");
     }
 }
