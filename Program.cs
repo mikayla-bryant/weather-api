@@ -12,7 +12,7 @@ class Program
     private static readonly HttpClient client = new HttpClient();
     private static string weatherConditions = "normal conditions";
     private static List<string> list = new List<string>();
-    private static string location = "Millinocket";
+    private static string location = "Jacksonville";
     static async Task Main(string[] args)
     {
         DotNetEnv.Env.Load();
@@ -21,10 +21,10 @@ class Program
 
         TwilioClient.Init(accountSid, authToken);
         var weatherData = await ProcessWeatherData();
-        int currentTemp = (int)(weatherData.Main.Temp);
-        int lowTemp = (int)(weatherData.Main.TempMin);
-        int highTemp = (int)(weatherData.Main.TempMax);
-     
+        int currentTemp = (int) weatherData.Main.Temp;
+        int lowTemp = (int) weatherData.Main.TempMin;
+        int highTemp = (int) weatherData.Main.TempMax;
+        
        if(weatherData.Weather.Length == 1){
                 weatherConditions = weatherData.Weather[0].Description;
         } else {
